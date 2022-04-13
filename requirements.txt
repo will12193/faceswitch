@@ -1,0 +1,7 @@
+pyinstaller
+Pillow
+numpy
+Cython
+deepface
+insightface
+opencv-python

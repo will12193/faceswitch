@@ -1,22 +1,16 @@
-FROM python:3.9
+FROM python:3.9 as production
 
+WORKDIR /app
 
 RUN apt-get update && \
     apt-get install -y \
-        file \
-        libcurl4-gnutls-dev \
-        libfreetype6-dev \
-        libgmp-dev \
-        libicu-dev \
-        libjpeg62-turbo-dev \
-        libmcrypt-dev \
-        libmhash-dev \
-        libonig-dev \
-        libpng-dev \
-        libsqlite3-dev \
-        libzip-dev \
-        re2c \
-        cron
+        vim
+
+COPY requirements.txt requirements.txt 
+COPY scripts/entrypoint.sh /entrypoint.sh
+
+RUN pip install -r ./requirements.txt 
+
 
 
 ENTRYPOINT [ "/entrypoint.sh" ]

@@ -2,108 +2,22 @@
     "version": "2.0.0",
     "tasks": [
       {
-        "label": "start",
-        "type": "shell",
-        "command": "./scripts/start.sh",
-        "problemMatcher": [],
-        "options": {
-          "env": {
-            "CI_COMMIT_SHA": "latest",
-            "COMPOSE_PROJECT_NAME": "whmcs"
-          }
-        }
-      },
-      {
-        "label": "mysql",
-        "type": "shell",
-        "command": "docker-compose up --force-recreate",
-        "problemMatcher": [],
-        "options": {
-          "env": {
-            "CI_COMMIT_SHA": "latest",
-            "COMPOSE_FILE": "docker/docker-compose.mysql.yml:docker/docker-compose.network.yml",
-            "COMPOSE_PROJECT_NAME": "whmcs"
-          }
-        }
-      },
-      {
-        "label": "provision",
-        "type": "shell",
-        "command": "docker-compose run whmcs_provision",
-        "problemMatcher": [],
-        "options": {
-          "env": {
-            "CI_COMMIT_SHA": "latest",
-            "COMPOSE_FILE": "docker/docker-compose.provision.yml:docker/docker-compose.network.yml:docker/docker-compose.volumes.yml",
-            "COMPOSE_PROJECT_NAME": "whmcs"
-          }
-        }
-      },
-      {
-        "label": "upgrade",
-        "type": "shell",
-        "command": "docker-compose run whmcs_upgrade",
-        "problemMatcher": [],
-        "options": {
-          "env": {
-            "CI_COMMIT_SHA": "latest",
-            "COMPOSE_FILE": "docker/docker-compose.upgrade.yml:docker/docker-compose.network.yml:docker/docker-compose.volumes.yml",
-            "COMPOSE_PROJECT_NAME": "whmcs"
-          }
-        }
-      },
-      {
-        "label": "mailhog",
-        "type": "shell",
-        "command": "docker-compose up --force-recreate",
-        "problemMatcher": [],
-        "options": {
-          "env": {
-            "CI_COMMIT_SHA": "latest",
-            "COMPOSE_FILE": "docker/docker-compose.mailhog.yml:docker/docker-compose.network.yml",
-            "COMPOSE_PROJECT_NAME": "whmcs"
-          }
-        }
-      },
-      {
         "label": "up",
         "type": "shell",
-        "command": "docker-compose up --force-recreate whmcs",
+        "command": "docker-compose up --force-recreate switch",
         "problemMatcher": [],
         "options": {
           "env": {
             "CI_COMMIT_SHA": "latest",
-            "COMPOSE_FILE": "docker/docker-compose.yml:docker/docker-compose.network.yml:docker/docker-compose.volumes.yml:docker/docker-compose.whmcs-dev.yml",
-            "COMPOSE_PROJECT_NAME": "whmcs"
+            "COMPOSE_FILE": "docker/docker-compose.yml",
+            "COMPOSE_PROJECT_NAME": "switch"
           }
         }
-      },
-      {
-        "label": "build base",
-        "type": "shell",
-        "command": "scripts/build.sh container.divisia.io/integratedprivate/whmcs/base docker/Dockerfile.base base builder",
-        "problemMatcher": [],
       },
       {
         "label": "build web",
         "type": "shell",
-        "command": "scripts/build.sh container.divisia.io/integratedprivate/whmcs/web docker/Dockerfile base",
-        "problemMatcher": [],
-      },
-      {
-        "label": "build upgrade",
-        "type": "shell",
-        "command": "scripts/build.sh container.divisia.io/integratedprivate/whmcs/upgrade docker/Dockerfile.upgrade upgrade",
-        "problemMatcher": [],
-      },
-      {
-        "label": "build all",
-        "type": "shell",
-        "dependsOrder": "sequence",
-        "dependsOn": [
-          "build base",
-          "build web"
-        ],
+        "command": "scripts/build.sh container.will12193/faceswitch/web docker/Dockerfile",
         "problemMatcher": [],
       },
       {
@@ -111,7 +25,7 @@
         "type": "shell",
         "dependsOrder": "sequence",
         "dependsOn": [
-          "build all",
+          "build web",
           "up"
         ],
         "problemMatcher": [],
