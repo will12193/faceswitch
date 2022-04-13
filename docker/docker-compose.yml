@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  whmcs:
+    image: "container.divisia.io/integratedprivate/whmcs/web:${CI_COMMIT_SHA:?latest}"
+    platform: linux/amd64
+    environment:
+      WHAT: "WHAT"
+    # volumes:
+    #   - whmcs_config:/tmp/config
+    restart: always
