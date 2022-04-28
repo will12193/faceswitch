@@ -13,7 +13,7 @@ package.domain = org.will12193
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = 
+source.include_exts = py,png,jpg,kv,atlas
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png,*
@@ -37,7 +37,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,opencv==4.5.2,numpy,plyer,android,jnius
+requirements = python3,kivy==2.0.0,opencv==4.5.2,numpy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -93,13 +93,13 @@ fullscreen = 0
 #icon.adaptive_background.filename = %(source.dir)s/data/icon_bg.png
 
 # (list) Permissions
-android.permissions = INTERNET,CAMERA
+android.permissions = CAMERA
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-#android.api = 27
+# android.api = 28
 
 # (int) Minimum API your APK / AAB will support.
 #android.minapi = 21
@@ -108,7 +108,7 @@ android.permissions = INTERNET,CAMERA
 #android.sdk = 20
 
 # (str) Android NDK version to use
-#android.ndk = 19b
+#android.ndk = 24
 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
 #android.ndk_api = 21
@@ -117,7 +117,7 @@ android.permissions = INTERNET,CAMERA
 #android.private_storage = True
 
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
-#android.ndk_path =
+#android.ndk_path = /home/will12193/.buildozer/android/platform/android-ndk-r24
 
 # (str) Android SDK directory (if empty, it will be automatically downloaded.)
 #android.sdk_path =
@@ -178,7 +178,7 @@ android.permissions = INTERNET,CAMERA
 #android.add_src =
 
 # (list) Android AAR archives to add
-#android.add_aars =
+#android.add_aars = support-compat-28.0.0.aar
 
 # (list) Put these files or directories in the apk assets directory.
 # Either form may be used, and assets need not be in 'source.include_exts'.
@@ -228,7 +228,7 @@ android.permissions = INTERNET,CAMERA
 #android.manifest.launch_mode = standard
 
 # (list) Android additional libraries to copy into libs/armeabi
-#android.add_libs_armeabi = libs/android/*.so
+# android.add_libs_armeabi = libs/android/*.so
 #android.add_libs_armeabi_v7a = libs/android-v7/*.so
 #android.add_libs_arm64_v8a = libs/android-v8/*.so
 #android.add_libs_x86 = libs/android-x86/*.so
@@ -262,7 +262,7 @@ android.permissions = INTERNET,CAMERA
 
 # (list) The Android archs to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
 # In past, was `android.arch` as we weren't supporting builds for multiple archs at the same time.
-android.archs = arm64-v8a, armeabi-v7a
+#android.archs = armeabi-v7a
 
 # (int) overrides automatic versionCode computation (used in build.gradle)
 # this is not the same as app version and should only be edited if you know what you're doing
@@ -303,7 +303,7 @@ android.allow_backup = True
 #p4a.commit = HEAD
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
-#p4a.source_dir =
+#p4a.source_dir = /mnt/d/Users/Documents/dev/python-for-android
 
 # (str) The directory in which python-for-android should look for your own build recipes (if any)
 #p4a.local_recipes =
