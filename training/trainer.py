@@ -139,7 +139,8 @@ plt.show()
 pd.DataFrame(history.history).plot(figsize=(8,5))
 plt.show()
 
-model.save('custom_4000_32_100.h5')
+# model.save('maskdetection_4000_32_100.h5')
+model.save(os.path.join('./models', 'maskdetection_4000_32_100.h5'))
 
 predict=model.predict(test_X,batch_size=BS)
 predict=np.argmax(predict,axis=1)

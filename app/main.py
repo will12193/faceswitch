@@ -5,6 +5,7 @@ from kivy.uix.camera import Camera
 from kivy.lang import Builder
 import numpy as np
 import cv2
+from mask_detect import detect_mask
 
 Builder.load_file("myapplayout.kv")
 
@@ -30,7 +31,8 @@ class AndroidCamera(Camera):
         return np.rot90(frame_bgr, 3)
 
     def frame_to_screen(self, frame):
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame_rgb = detect_mask(frame)
+        # frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         cv2.putText(frame_rgb, str(self.counter), (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
         self.counter += 1
         flipped = np.flip(frame_rgb, 0)
