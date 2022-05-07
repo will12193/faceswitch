@@ -23,6 +23,8 @@ from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
+# https://github.com/techyhoney/Facemask_Detection
+
 dataset = "./dataset"
 imagePaths=list(paths.list_images(dataset))
 

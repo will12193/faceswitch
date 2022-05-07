@@ -10,7 +10,7 @@ from tensorflow.keras.models import load_model
 
 
 # Load model
-model=load_model(r'./maskdetection_4000_32_100.h5')
+model=load_model(r'../training/models/maskdetection_4000_32_100.h5')
 
 # Load image
 image_file = r"./crowd1.jpg"
