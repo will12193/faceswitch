@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-modelName = "maskdetection_1"
-history=np.load(r'./graphs/maskdetection_1/modelName-history.npy',allow_pickle='TRUE').item()
+modelName = "resNet50_1"
+history=np.load(r'./resNet50_1-history.npy',allow_pickle='TRUE').item()
 
 loss_train = history['loss']
 loss_val = history['val_loss']

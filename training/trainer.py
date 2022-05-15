@@ -15,11 +15,13 @@ from sklearn.metrics import classification_report
 from maskDetection import maskDetection
 from resNet50 import resNet50
 
-modelName = "resNet50_1"
+# modelName = "resNet50_1"
 # modelName = "maskdetection_1"
+# modelName = "resNet50_2"
+modelName = "maskdetection_2"
 
-dataset = "./data/dataset1"
-# dataset = "./data/dataset2"
+# dataset = "./data/dataset1"
+dataset = "./data/dataset2"
 
 # Label and setup dataset
 imagePaths=list(paths.list_images(dataset))
@@ -58,8 +60,8 @@ aug=ImageDataGenerator(
 
 # Build the model
 print('Build Model')
-# model = maskDetection(input_shape=(96, 96, 3))
-model = resNet50(input_shape=(96, 96, 3))
+model = maskDetection(input_shape=(96, 96, 3))
+# model = resNet50(input_shape=(96, 96, 3))
 
 # Print model structure
 model.summary()
@@ -90,7 +92,7 @@ history = model.fit(
 # Save the history
 # Load with history=np.load('my_history.npy',allow_pickle='TRUE').item()
 try:
-    np.save('modelName-history.npy',history.history)
+    np.save(modelName+'-history.npy',history.history)
 except Exception as e: 
     print("np.save failure: " + str(e))
 
@@ -105,8 +107,8 @@ except Exception as e:
 
 # Make training vs validation loss graphs
 try:
-    loss_train = history['loss']
-    loss_val = history['val_loss']
+    loss_train = history.history['loss']
+    loss_val = history.history['val_loss']
     plt.plot(loss_train, 'g', label='Training loss')
     plt.plot(loss_val, 'b', label='validation loss')
     plt.title('Training and Validation loss')
@@ -119,8 +121,8 @@ try:
     plt.clf()
 
     # Make training vs validation accuracy graphs
-    acc_train = history['accuracy']
-    acc_val = history['val_accuracy']
+    acc_train = history.history['accuracy']
+    acc_val = history.history['val_accuracy']
     plt.plot(acc_train, 'g', label='Training accuracy')
     plt.plot(acc_val, 'b', label='validation accuracy')
     plt.title('Training and Validation accuracy')
@@ -133,7 +135,7 @@ try:
     plt.clf()
 
     # Plot loss and accuracy on the same graph
-    pd.DataFrame(history).plot(figsize=(8,5))
+    pd.DataFrame(history.history).plot(figsize=(8,5))
     plt.title('Training and Validation accuracy and loss')
     plt.xlabel('Epochs')
     plt.ylabel('Accuracy')
