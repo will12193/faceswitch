@@ -7,21 +7,18 @@ from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.models import load_model
 from retinaface_detect import detect_faces
 
-# MODEL_PATH = r'./models/maskdetection_4000_32_100.h5'
-MODEL_PATH = r'./models/resNet50_4000_32_100.h5'
+MODEL_PATH_1 = r'./models/maskdetection_1-v1.h5'
+MODEL_PATH_2 = r'./models/resNet50_1-v1.h5'
 
 
 # Takes an CV2 image and outputs the same image with faces bounded and 
 # an indication as to whether they are wearing masks
-def detect_mask(image, model, rfModel, verbose=False):
-    # Find faces
-    theFaces = detect_faces(image, model = rfModel)
-    if isinstance(theFaces, tuple):
+def detect_mask(image, model, faces, verbose=False):
+    if isinstance(faces, tuple):
         return image
-    
-    imageOutput = copy.deepcopy(image)
 
-    for i, f in theFaces.items():
+    imageOutput = copy.deepcopy(image)
+    for i, f in faces.items():
         conf = f["score"]
         if verbose:
             print(i + " - Confidence: ",conf)
@@ -71,7 +68,8 @@ def detect_mask(image, model, rfModel, verbose=False):
     return imageOutput
 
 def main():
-    model = load_model(MODEL_PATH)
+    modelRes = load_model(MODEL_PATH_1)
+    modelDet = load_model(MODEL_PATH_2)
     rfModel = RetinaFace.build_model()
 
     cap = cv2.VideoCapture(0)
@@ -81,8 +79,15 @@ def main():
     while(cap.isOpened()):
         ret, frame = cap.read()
         if ret == True:
-            detFrame = detect_mask(frame, model, rfModel)
-            cv2.imshow('frame', detFrame)
+            # Find faces
+            faces = detect_faces(frame, model = rfModel)
+
+            # Detect mask
+            frame1 = detect_mask(frame, modelRes, faces)
+            cv2.imshow(MODEL_PATH_1, frame1)
+            frame2 = detect_mask(frame, modelDet, faces)
+            cv2.imshow(MODEL_PATH_2, frame2)
+
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
         else: 

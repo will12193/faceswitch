@@ -12,11 +12,11 @@ from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
-from maskdetection import maskDetection
+from maskDetection import maskDetection
 from resNet50 import resNet50
 
-modelName = "resNet50_4000_32_100"
-# modelName = "maskdetection_4000_32_100"
+modelName = "resNet50_1"
+# modelName = "maskdetection_1"
 
 dataset = "./dataset"
 
@@ -83,51 +83,56 @@ history = model.fit(
     validation_data=(test_X,test_Y),
     validation_steps=len(test_X)//bachSize,
     epochs=epochs,
-    callbacks=[mc,es]
+    callbacks=[mc,es],
+    verbose=1
 )
 
-# Make training vs validation loss graphs
-loss_train = history.history['loss']
-loss_val = history.history['val_loss']
-epochs = range(1, 101)
-plt.plot(epochs, loss_train, 'g', label='Training loss')
-plt.plot(epochs, loss_val, 'b', label='validation loss')
-plt.title('Training and Validation loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.legend()
-plt.show()
-plt.savefig(modelName+'-TrainingLoss.png')
-
-# Make training vs validation accuracy graphs
-acc_train = history.history['accuracy']
-acc_val = history.history['val_accuracy']
-epochs = range(1, 101)
-plt.plot(epochs, acc_train, 'g', label='Training accuracy')
-plt.plot(epochs, acc_val, 'b', label='validation accuracy')
-plt.title('Training and Validation accuracy')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
-plt.legend()
-plt.show()
-plt.savefig(modelName+'-TrainingAcc.png')
-
-# Plot loss and accuracy on the same graph
-pd.DataFrame(history.history).plot(figsize=(8,5))
-plt.show()
-plt.savefig(modelName+'-LossAndAcc.png')
-
-# Save the model 
-# model.save(os.path.join('../app/models', modelName+'.h5'))
-
 # Print reports
-predict = model.predict(test_X,batch_size=bachSize)
-predict = np.argmax(predict,axis=1)
-report = classification_report(test_Y.argmax(axis=1),predict,target_names=lb.classes_)
-print(report)
+try:
+    predict = model.predict(test_X,batch_size=bachSize)
+    predict = np.argmax(predict,axis=1)
+    report = classification_report(test_Y.argmax(axis=1),predict,target_names=lb.classes_)
+    print("Report:\n" + report)
+except Exception as e: 
+    print("Report failure: " + str(e))
 
-scores = model.evaluate((test_X,test_Y))
-print("Evaluate: " + scores)
+try:
+    scores = model.evaluate(test_X)
+    print("Evaluate:\n" + str(scores))
+except Exception as e: 
+    print("Evaluate failure: " + str(e))
+
+# Make training vs validation loss graphs
+try:
+    loss_train = history.history['loss']
+    loss_val = history.history['val_loss']
+    plt.plot(loss_train, 'g', label='Training loss')
+    plt.plot(loss_val, 'b', label='validation loss')
+    plt.title('Training and Validation loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.show()
+    plt.savefig(modelName+'-TrainingLoss.png')
+
+    # Make training vs validation accuracy graphs
+    acc_train = history.history['accuracy']
+    acc_val = history.history['val_accuracy']
+    plt.plot(acc_train, 'g', label='Training accuracy')
+    plt.plot(acc_val, 'b', label='validation accuracy')
+    plt.title('Training and Validation accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.show()
+    plt.savefig(modelName+'-TrainingAcc.png')
+
+    # Plot loss and accuracy on the same graph
+    pd.DataFrame(history.history).plot(figsize=(8,5))
+    plt.show()
+    plt.savefig(modelName+'-LossAndAcc.png')
+except Exception as e: 
+    print("Plot failure: " + str(e))
 
 
 "#<CITATION: USES SOME CODE FROM https://github.com/techyhoney/Facemask_Detection, Hiten Goyal>"
