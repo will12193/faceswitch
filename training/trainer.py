@@ -18,7 +18,8 @@ from resNet50 import resNet50
 modelName = "resNet50_1"
 # modelName = "maskdetection_1"
 
-dataset = "./dataset"
+dataset = "./data/dataset1"
+# dataset = "./data/dataset2"
 
 # Label and setup dataset
 imagePaths=list(paths.list_images(dataset))
@@ -26,9 +27,9 @@ data=[]
 labels=[]
 
 for i in imagePaths:
-    label=i.split(os.path.sep)[-2]
+    label = i.split(os.path.sep)[-2]
     labels.append(label)
-    image = load_img(i,target_size=(96,96))
+    image = load_img(i, target_size=(96,96))
     image = img_to_array(image)
     image = preprocess_input(image)
     data.append(image)
@@ -57,8 +58,7 @@ aug=ImageDataGenerator(
 
 # Build the model
 print('Build Model')
-
-# model = maskdetection(input_shape=(96, 96, 3))
+# model = maskDetection(input_shape=(96, 96, 3))
 model = resNet50(input_shape=(96, 96, 3))
 
 # Print model structure
@@ -73,7 +73,7 @@ opt = Adam(learning_rate=learningRate,decay=learningRate/epochs)
 model.compile(loss='binary_crossentropy',optimizer=opt,metrics=['accuracy'])
 
 # Early stopping and model checkpoint
-es = EarlyStopping(monitor='val_accuracy', mode='max', verbose=1, patience=20)
+es = EarlyStopping(monitor='val_accuracy', mode='max', verbose=1, patience=30)
 mc = ModelCheckpoint(os.path.join('../app/models', modelName+'.h5'), monitor='val_accuracy', mode='max', save_best_only=True)
 
 # Fit the model
@@ -87,6 +87,13 @@ history = model.fit(
     verbose=1
 )
 
+# Save the history
+# Load with history=np.load('my_history.npy',allow_pickle='TRUE').item()
+try:
+    np.save('modelName-history.npy',history.history)
+except Exception as e: 
+    print("np.save failure: " + str(e))
+
 # Print reports
 try:
     predict = model.predict(test_X,batch_size=bachSize)
@@ -96,39 +103,42 @@ try:
 except Exception as e: 
     print("Report failure: " + str(e))
 
-try:
-    scores = model.evaluate(test_X)
-    print("Evaluate:\n" + str(scores))
-except Exception as e: 
-    print("Evaluate failure: " + str(e))
-
 # Make training vs validation loss graphs
 try:
-    loss_train = history.history['loss']
-    loss_val = history.history['val_loss']
+    loss_train = history['loss']
+    loss_val = history['val_loss']
     plt.plot(loss_train, 'g', label='Training loss')
     plt.plot(loss_val, 'b', label='validation loss')
     plt.title('Training and Validation loss')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.legend()
+    plt.grid()
     plt.show()
     plt.savefig(modelName+'-TrainingLoss.png')
+    plt.clf()
 
     # Make training vs validation accuracy graphs
-    acc_train = history.history['accuracy']
-    acc_val = history.history['val_accuracy']
+    acc_train = history['accuracy']
+    acc_val = history['val_accuracy']
     plt.plot(acc_train, 'g', label='Training accuracy')
     plt.plot(acc_val, 'b', label='validation accuracy')
     plt.title('Training and Validation accuracy')
     plt.xlabel('Epochs')
     plt.ylabel('Accuracy')
     plt.legend()
+    plt.grid()
     plt.show()
     plt.savefig(modelName+'-TrainingAcc.png')
+    plt.clf()
 
     # Plot loss and accuracy on the same graph
-    pd.DataFrame(history.history).plot(figsize=(8,5))
+    pd.DataFrame(history).plot(figsize=(8,5))
+    plt.title('Training and Validation accuracy and loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.grid()
     plt.show()
     plt.savefig(modelName+'-LossAndAcc.png')
 except Exception as e: 

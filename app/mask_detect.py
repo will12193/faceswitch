@@ -7,7 +7,7 @@ from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.models import load_model
 from retinaface_detect import detect_faces
 
-MODEL_PATH_1 = r'./models/maskdetection_1-v1.h5'
+MODEL_PATH_1 = r'./models/maskdetection_1.h5'
 MODEL_PATH_2 = r'./models/resNet50_1-v1.h5'
 
 
