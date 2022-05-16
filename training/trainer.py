@@ -17,24 +17,29 @@ from resNet50 import resNet50
 
 # modelName = "resNet50_1"
 # modelName = "maskdetection_1"
-# modelName = "resNet50_2"
-modelName = "maskdetection_2"
+# modelName = "resNet50_2.1"
+# modelName = "maskdetection_2.1"
+modelName = "resNet50_3"
+# modelName = "maskdetection_3"
 
 # dataset = "./data/dataset1"
-dataset = "./data/dataset2"
+# dataset = "./data/dataset2.1"
+dataset = "./data/dataset3"
 
 # Label and setup dataset
-imagePaths=list(paths.list_images(dataset))
+imagePaths = list(paths.list_images(dataset))
 data=[]
 labels=[]
 
-for i in imagePaths:
+for count, i in enumerate(imagePaths):
+    print("Loading labels: " + str(count) + " / " + str(len(imagePaths) - 1), end='\r')
     label = i.split(os.path.sep)[-2]
     labels.append(label)
     image = load_img(i, target_size=(96,96))
     image = img_to_array(image)
     image = preprocess_input(image)
     data.append(image)
+print("Lables Loaded")
 
 data = np.array(data,dtype='float32')
 labels = np.array(labels)
@@ -49,7 +54,11 @@ print('Split data')
 train_X, test_X, train_Y, test_Y = train_test_split(
             data, labels, test_size=0.20, random_state=10, stratify=labels)
 
-aug=ImageDataGenerator(
+print("Training data size: X - " + str(len(train_X)) + ", Y - " + str(len(train_Y)))
+print("Validation data size: X - " + str(len(test_X)) + ", Y - " + str(len(test_Y)))
+
+
+aug = ImageDataGenerator(
                        rotation_range=20,
                        zoom_range=0.15,width_shift_range=0.2,
                        height_shift_range=0.2,shear_range=0.15,
@@ -60,8 +69,8 @@ aug=ImageDataGenerator(
 
 # Build the model
 print('Build Model')
-model = maskDetection(input_shape=(96, 96, 3))
-# model = resNet50(input_shape=(96, 96, 3))
+# model = maskDetection(input_shape=(96, 96, 3))
+model = resNet50(input_shape=(96, 96, 3))
 
 # Print model structure
 model.summary()
@@ -86,7 +95,8 @@ history = model.fit(
     validation_steps=len(test_X)//bachSize,
     epochs=epochs,
     callbacks=[mc,es],
-    verbose=1
+    verbose=1,
+    validation_freq=2
 )
 
 # Save the history
@@ -94,7 +104,7 @@ history = model.fit(
 try:
     np.save(modelName+'-history.npy',history.history)
 except Exception as e: 
-    print("np.save failure: " + str(e))
+    print("np.save history failure: " + str(e))
 
 # Print reports
 try:

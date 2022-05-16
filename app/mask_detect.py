@@ -9,6 +9,7 @@ from retinaface_detect import detect_faces
 
 MODEL_PATH_1 = r'./models/maskdetection_1.h5'
 MODEL_PATH_2 = r'./models/resNet50_1.h5'
+MODEL_PATH_3 = r'./models/resNet50_2.1.h5'
 
 
 # Takes an CV2 image and outputs the same image with faces bounded and 
@@ -68,8 +69,9 @@ def detect_mask(image, model, faces, verbose=False):
     return imageOutput
 
 def main():
-    modelRes = load_model(MODEL_PATH_1)
-    modelDet = load_model(MODEL_PATH_2)
+    model1 = load_model(MODEL_PATH_1)
+    model2 = load_model(MODEL_PATH_2)
+    model3 = load_model(MODEL_PATH_3)
     rfModel = RetinaFace.build_model()
 
     cap = cv2.VideoCapture(0)
@@ -83,10 +85,12 @@ def main():
             faces = detect_faces(frame, model = rfModel)
 
             # Detect mask
-            frame1 = detect_mask(frame, modelRes, faces)
+            frame1 = detect_mask(frame, model1, faces)
             cv2.imshow(MODEL_PATH_1, frame1)
-            frame2 = detect_mask(frame, modelDet, faces)
+            frame2 = detect_mask(frame, model2, faces)
             cv2.imshow(MODEL_PATH_2, frame2)
+            frame3 = detect_mask(frame, model3, faces)
+            cv2.imshow(MODEL_PATH_3, frame3)
 
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
