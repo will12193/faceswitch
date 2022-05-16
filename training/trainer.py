@@ -19,8 +19,8 @@ from resNet50 import resNet50
 # modelName = "maskdetection_1"
 # modelName = "resNet50_2.1"
 # modelName = "maskdetection_2.1"
-modelName = "resNet50_3"
-# modelName = "maskdetection_3"
+# modelName = "resNet50_3"
+modelName = "maskdetection_3"
 
 # dataset = "./data/dataset1"
 # dataset = "./data/dataset2.1"
@@ -50,13 +50,11 @@ labels = to_categorical(labels)
 
 # Split data
 print('Split data')
-
 train_X, test_X, train_Y, test_Y = train_test_split(
             data, labels, test_size=0.20, random_state=10, stratify=labels)
 
 print("Training data size: X - " + str(len(train_X)) + ", Y - " + str(len(train_Y)))
 print("Validation data size: X - " + str(len(test_X)) + ", Y - " + str(len(test_Y)))
-
 
 aug = ImageDataGenerator(
                        rotation_range=20,
@@ -69,12 +67,8 @@ aug = ImageDataGenerator(
 
 # Build the model
 print('Build Model')
-# model = maskDetection(input_shape=(96, 96, 3))
-model = resNet50(input_shape=(96, 96, 3))
-
-# Print model structure
-model.summary()
-print(model.summary())
+model = maskDetection(input_shape=(96, 96, 3))
+# model = resNet50(input_shape=(96, 96, 3))
 
 # Define model learning rate, number of epochs, bach size, optimizer, and loss function
 learningRate = 0.0005
@@ -82,6 +76,12 @@ epochs = 100
 bachSize = 32
 opt = Adam(learning_rate=learningRate,decay=learningRate/epochs)
 model.compile(loss='binary_crossentropy',optimizer=opt,metrics=['accuracy'])
+print("steps_per_epoch: " + str(len(train_X)//bachSize))
+print("validation_steps: " + str(len(test_X)//bachSize))
+
+# Print model structure
+model.summary()
+print(model.summary())
 
 # Early stopping and model checkpoint
 es = EarlyStopping(monitor='val_accuracy', mode='max', verbose=1, patience=30)
@@ -90,13 +90,13 @@ mc = ModelCheckpoint(os.path.join('../app/models', modelName+'.h5'), monitor='va
 # Fit the model
 history = model.fit(
     aug.flow(train_X,train_Y,batch_size = bachSize),
-    steps_per_epoch=len(train_X)//bachSize,
+    steps_per_epoch=np.ceil((len(train_X)//bachSize)-1),
     validation_data=(test_X,test_Y),
-    validation_steps=len(test_X)//bachSize,
+    validation_steps=np.ceil((len(test_X)//bachSize)-1),
     epochs=epochs,
     callbacks=[mc,es],
     verbose=1,
-    validation_freq=2
+    validation_freq=1
 )
 
 # Save the history
