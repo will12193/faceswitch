@@ -18,13 +18,13 @@ from resNet50 import resNet50
 # modelName = "resNet50_1"
 # modelName = "maskdetection_1"
 # modelName = "resNet50_2.1"
-# modelName = "maskdetection_2.1"
+modelName = "maskdetection_2.1"
 # modelName = "resNet50_3"
-modelName = "maskdetection_3"
+# modelName = "maskdetection_3"
 
 # dataset = "./data/dataset1"
-# dataset = "./data/dataset2.1"
-dataset = "./data/dataset3"
+dataset = "./data/dataset2.1"
+# dataset = "./data/dataset3"
 
 # Label and setup dataset
 imagePaths = list(paths.list_images(dataset))
@@ -84,7 +84,7 @@ model.summary()
 print(model.summary())
 
 # Early stopping and model checkpoint
-es = EarlyStopping(monitor='val_accuracy', mode='max', verbose=1, patience=30)
+es = EarlyStopping(monitor='val_accuracy', mode='max', verbose=1, patience=20)
 mc = ModelCheckpoint(os.path.join('../app/models', modelName+'.h5'), monitor='val_accuracy', mode='max', save_best_only=True)
 
 # Fit the model
