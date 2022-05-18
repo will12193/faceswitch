@@ -1,5 +1,6 @@
 import cv2
 import copy
+import time
 from retinaface import RetinaFace
 import numpy as np
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
@@ -7,11 +8,17 @@ from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.models import load_model
 from retinaface_detect import detect_faces
 
-MODEL_PATH_1 = r'./models/maskdetection_1.h5'
-MODEL_PATH_2 = r'./models/resNet50_1.h5'
-MODEL_PATH_3 = r'./models/resNet50_2.1.h5'
-MODEL_PATH_4 = r'./models/resNet50_3.h5'
-MODEL_PATHS = [MODEL_PATH_1, MODEL_PATH_2, MODEL_PATH_3, MODEL_PATH_4]
+MODEL_PATHS = [
+    # r'./models/maskdetection_1.h5', 
+    # r'./models/maskdetection_2.1.h5', 
+    r'./models/maskdetection_3.h5', 
+    r'./models/maskdetection_3_60.h5', 
+    # r'./models/resNet50_1.h5', 
+    # r'./models/resNet50_1_60.h5', 
+    # r'./models/resNet50_2.1.h5', 
+    r'./models/resNet50_3.h5',
+    r'./models/resNet50_3_60.h5'
+]
 
 # Takes an CV2 image and outputs the same image with faces bounded and 
 # an indication as to whether they are wearing masks
@@ -41,10 +48,16 @@ def detect_mask(image, model, faces, verbose=False):
             face = np.expand_dims(face,axis=0)
             
             # Use model to determine if mask is worn or not
-            (mask, withoutMask) = model.predict(face)[0]
             if verbose:
+                startTime = time.time()
+
+            (mask, withoutMask) = model.predict(face)[0]
+
+            if verbose:
+                endTime = time.time()
+                print("Model runtime: "+ str(endTime - startTime))
                 print("MASK: ", mask)
-                print("Without: ", withoutMask)
+                print("WITHOUT: ", withoutMask)
 
             # Colour and label for the output
             if mask > withoutMask:
@@ -87,8 +100,10 @@ def main():
 
             # Detect mask
             for i, m in enumerate(MODEL_PATHS):
-                frame = detect_mask(frame, models[i], faces)
-                cv2.imshow(m, frame)
+                # print(m)
+                # frameDetect = detect_mask(frame, models[i], faces, verbose=True)
+                frameDetect = detect_mask(frame, models[i], faces)
+                cv2.imshow(m, frameDetect)
 
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break

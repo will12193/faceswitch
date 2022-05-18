@@ -15,16 +15,16 @@ from sklearn.metrics import classification_report
 from maskDetection import maskDetection
 from resNet50 import resNet50
 
-# modelName = "resNet50_1"
+# modelName = "resNet50_1_60"
 # modelName = "maskdetection_1"
 # modelName = "resNet50_2.1"
-modelName = "maskdetection_2.1"
-# modelName = "resNet50_3"
-# modelName = "maskdetection_3"
+# modelName = "maskdetection_2.1"
+# modelName = "resNet50_3_60"
+modelName = "maskdetection_3_60"
 
 # dataset = "./data/dataset1"
-dataset = "./data/dataset2.1"
-# dataset = "./data/dataset3"
+# dataset = "./data/dataset2.1"
+dataset = "./data/dataset3"
 
 # Label and setup dataset
 imagePaths = list(paths.list_images(dataset))
@@ -72,7 +72,7 @@ model = maskDetection(input_shape=(96, 96, 3))
 
 # Define model learning rate, number of epochs, bach size, optimizer, and loss function
 learningRate = 0.0005
-epochs = 100
+epochs = 60
 bachSize = 32
 opt = Adam(learning_rate=learningRate,decay=learningRate/epochs)
 model.compile(loss='binary_crossentropy',optimizer=opt,metrics=['accuracy'])
