@@ -9,15 +9,15 @@ from tensorflow.keras.models import load_model
 from retinaface_detect import detect_faces
 
 MODEL_PATHS = [
-    # r'./models/maskdetection_1.h5', 
-    # r'./models/maskdetection_2.1.h5', 
+    r'./models/maskdetection_1.h5', 
+    r'./models/maskdetection_2.1.h5', 
     r'./models/maskdetection_3.h5', 
-    r'./models/maskdetection_3_60.h5', 
-    # r'./models/resNet50_1.h5', 
+    # r'./models/maskdetection_3_60.h5', 
+    r'./models/resNet50_1.h5', 
     # r'./models/resNet50_1_60.h5', 
-    # r'./models/resNet50_2.1.h5', 
+    r'./models/resNet50_2.1.h5', 
     r'./models/resNet50_3.h5',
-    r'./models/resNet50_3_60.h5'
+    # r'./models/resNet50_3_60.h5'
 ]
 
 # Takes an CV2 image and outputs the same image with faces bounded and 
